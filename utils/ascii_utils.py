@@ -9,6 +9,10 @@ class AsciiParser:
     def next_line(self, offset=0):
         return self.lines[self.offset + offset]
 
+    @property
+    def next_line_preview(self):
+        return self.next_line()
+
     def next_vector(self, offset=0):
         return self.next_line(offset).split()
 

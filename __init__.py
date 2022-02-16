@@ -51,6 +51,9 @@ def parse_ascii_mesh(file_lines, external_skeleton=False):
                 bone_ids = reader.parse_int_vector()
                 weights = reader.parse_float_vector()
                 mesh.add_weight(bone_ids, weights)
+            elif len(reader.next_vector()) not in (3, 4):
+                reader.parse_float_vector()
+                reader.parse_float_vector()
         for _ in range(reader.parse_int()):
             mesh.add_polygon(reader.parse_int_vector())
         model.add_mesh(mesh)
