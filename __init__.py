@@ -3,17 +3,21 @@ As Noesis uses python 3.2
 """
 import os
 
-from .objects.bone import Bone
-from .objects.material import Material
-from .objects.mesh import Mesh
-from .objects.model import Model
-from .utils.ascii_utils import AsciiParser
+from .objects import Mesh
+from .objects import Model
+from .objects import Bone
+from .objects import Material
+from .utils import AsciiParser
 
 
-def parse_ascii_mesh(path):
+def parse_ascii_mesh_from_file(path):
     assert os.path.exists(path), 'Specified path "%s" does not exist' % path
     with open(path, 'r', encoding='utf8') as f:
         file_lines = [line.strip().rstrip() for line in f.read().split('\n')]
+    return parse_ascii_mesh(file_lines)
+
+
+def parse_ascii_mesh(file_lines):
     reader = AsciiParser(file_lines)
     model = Model()
     for _ in range(reader.parse_int()):
