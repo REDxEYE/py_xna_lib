@@ -3,6 +3,9 @@ class AsciiParser:
         self.offset = 0
         self.lines = lines  # type:list
 
+    def __bool__(self):
+        return self.offset < len(self.lines)
+
     def parse_int(self):
         val = int(self.lines[self.offset])
         self.offset += 1

@@ -13,7 +13,7 @@ from .utils.ascii_utils import AsciiParser
 def parse_ascii_mesh_from_file(path, external_skeleton=False):
     assert os.path.exists(path), 'Specified path "%s" does not exist' % path
     with open(path, 'r', encoding='utf8') as f:
-        file_lines = [line.strip().rstrip() for line in f.read().split('\n')]
+        file_lines = [line.strip().rstrip() for line in f.read().split('\n') if line]
     return parse_ascii_mesh(file_lines, external_skeleton)
 
 
@@ -33,6 +33,8 @@ def parse_ascii_mesh(file_lines, external_skeleton=False):
     if external_skeleton and model.bones:
         raise Exception('Unexpected state, we have external skeleton and internal skeleton')
     has_bones = bool(model.bones) or external_skeleton
+    if not reader:  # Exit early if we don't have mesh data
+        return model
     for _ in range(reader.parse_int()):
         mesh = Mesh(reader.parse_string(), reader.parse_int())
         textures = [(reader.parse_string(), reader.parse_int()) for _ in range(reader.parse_int())]
