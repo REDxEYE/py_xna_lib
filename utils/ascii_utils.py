@@ -2,6 +2,9 @@ class AsciiParser:
     def __init__(self, lines):
         self.offset = 0
         self.lines = lines  # type:list
+        for i in range(len(self.lines)):
+            if '#' in self.lines[i]:
+                self.lines[i] = self.lines[i].split('#')[0]
 
     def __bool__(self):
         return self.offset < len(self.lines)
