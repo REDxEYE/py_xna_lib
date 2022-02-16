@@ -15,4 +15,4 @@ class AsciiParser:
         return [float(v) for v in self.lines.pop(0).split(' ')]
 
     def parse_int_vector(self):
-        return [float(v) for v in self.lines.pop(0).split(' ')]
+        return [int(v) for v in self.lines.pop(0).split(' ')]
