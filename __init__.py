@@ -49,7 +49,7 @@ def parse_ascii_mesh(file_lines, external_skeleton=False):
             if has_bones:
                 bone_ids = reader.parse_int_vector()
                 weights = reader.parse_float_vector()
-                mesh.add_weight(list(zip(bone_ids, weights)))
+                mesh.add_weight(bone_ids, weights)
         for _ in range(reader.parse_int()):
             mesh.add_polygon(reader.parse_int_vector())
         model.add_mesh(mesh)
