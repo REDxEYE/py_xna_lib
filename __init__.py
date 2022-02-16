@@ -38,7 +38,7 @@ def parse_ascii_mesh(file_lines, external_skeleton=False):
     for _ in range(reader.parse_int()):
         mesh = Mesh(reader.parse_string(), reader.parse_int())
         textures = [(reader.parse_string(), reader.parse_int()) for _ in range(reader.parse_int())]
-        material = Material(mesh.name + '_mat', textures)
+        material = Material(textures[0][0] + '_mat', textures)
         mesh.set_material(material)
         for _ in range(reader.parse_int()):
             mesh.vertices.append(reader.parse_float_vector())
