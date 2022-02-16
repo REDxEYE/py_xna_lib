@@ -13,7 +13,7 @@ from .utils.ascii_utils import AsciiParser
 def parse_ascii_mesh_from_file(path, external_skeleton=False):
     assert os.path.exists(path), 'Specified path "%s" does not exist' % path
     with open(path, 'r', encoding='utf8') as f:
-        file_lines = [line.strip().rstrip() for line in f.read().split('\n') if line]
+        file_lines = [line.strip('\n\r') for line in f.read().split('\n') if line]
     return parse_ascii_mesh(file_lines, external_skeleton)
 
 
