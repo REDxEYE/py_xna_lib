@@ -1,18 +1,29 @@
 class AsciiParser:
     def __init__(self, lines):
+        self.offset = 0
         self.lines = lines  # type:list
 
     def parse_int(self):
-        return int(self.lines.pop(0))
+        val = int(self.lines[self.offset])
+        self.offset += 1
+        return val
 
     def parse_float(self):
-        return float(self.lines.pop(0))
+        val = float(self.lines[self.offset])
+        self.offset += 1
+        return val
 
     def parse_string(self):
-        return self.lines.pop(0)
+        val = self.lines[self.offset]
+        self.offset += 1
+        return val
 
     def parse_float_vector(self):
-        return [float(v) for v in self.lines.pop(0).split(' ')]
+        val = [float(v) for v in self.lines[self.offset].split(' ')]
+        self.offset += 1
+        return val
 
     def parse_int_vector(self):
-        return [int(v) for v in self.lines.pop(0).split(' ')]
+        val = [int(v) for v in self.lines[self.offset].split(' ')]
+        self.offset += 1
+        return val
