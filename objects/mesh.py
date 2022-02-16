@@ -26,7 +26,7 @@ class Mesh:
         self.vertex_colors.append([c / 255 for c in color])
 
     def add_uv(self, uv, layer_id):
-        self.uv_layers[layer_id].append((uv[0], 1 - uv[1]))
+        self.uv_layers[layer_id].append((uv[0], uv[1]))
 
     def add_weight(self, bone_ids, weights):
         self.bone_ids.append(bone_ids)
