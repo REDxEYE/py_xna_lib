@@ -46,7 +46,8 @@ def parse_ascii_mesh(file_lines, external_skeleton=False):
             mesh.add_v_color(reader.parse_int_vector())
             for uv_layer_id in mesh.uv_layers.keys():
                 mesh.add_uv(reader.parse_float_vector(), uv_layer_id)
-            if has_bones:
+            if has_bones or len(reader.next_vector()) == 4:
+                has_bones = True
                 bone_ids = reader.parse_int_vector()
                 weights = reader.parse_float_vector()
                 mesh.add_weight(bone_ids, weights)

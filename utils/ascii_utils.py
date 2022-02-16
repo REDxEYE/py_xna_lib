@@ -6,6 +6,12 @@ class AsciiParser:
             if '#' in self.lines[i]:
                 self.lines[i] = self.lines[i].split('#')[0]
 
+    def next_line(self, offset=0):
+        return self.lines[self.offset + offset]
+
+    def next_vector(self, offset=0):
+        return self.next_line(offset).split()
+
     def __bool__(self):
         return self.offset < len(self.lines)
 
