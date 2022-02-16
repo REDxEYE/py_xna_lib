@@ -3,21 +3,21 @@ As Noesis uses python 3.2
 """
 import os
 
-from .objects import Mesh
-from .objects import Model
-from .objects import Bone
-from .objects import Material
-from .utils import AsciiParser
+from .objects.bone import Bone
+from .objects.material import Material
+from .objects.mesh import Mesh
+from .objects.model import Model
+from .utils.ascii_utils import AsciiParser
 
 
-def parse_ascii_mesh_from_file(path):
+def parse_ascii_mesh_from_file(path, external_skeleton=False):
     assert os.path.exists(path), 'Specified path "%s" does not exist' % path
     with open(path, 'r', encoding='utf8') as f:
         file_lines = [line.strip().rstrip() for line in f.read().split('\n')]
-    return parse_ascii_mesh(file_lines)
+    return parse_ascii_mesh(file_lines, external_skeleton)
 
 
-def parse_ascii_mesh(file_lines):
+def parse_ascii_mesh(file_lines, external_skeleton=False):
     reader = AsciiParser(file_lines)
     model = Model()
     for _ in range(reader.parse_int()):
@@ -30,7 +30,9 @@ def parse_ascii_mesh(file_lines):
         del bone_parent
         del bone_mat
         del bone
-    has_bones = bool(model.bones)
+    if external_skeleton and model.bones:
+        raise Exception('Unexpected state, we have external skeleton and internal skeleton')
+    has_bones = bool(model.bones) or external_skeleton
     for _ in range(reader.parse_int()):
         mesh = Mesh(reader.parse_string(), reader.parse_int())
         textures = [(reader.parse_string(), reader.parse_int()) for _ in range(reader.parse_int())]
