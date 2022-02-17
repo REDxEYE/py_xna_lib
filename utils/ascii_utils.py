@@ -35,11 +35,11 @@ class AsciiParser:
         return val
 
     def parse_float_vector(self):
-        val = [float(v) for v in self.lines[self.offset].split(' ')]
+        val = map(float, self.lines[self.offset].split(' '))
         self.offset += 1
-        return val
+        return list(val)
 
     def parse_int_vector(self):
-        val = [int(v) for v in self.lines[self.offset].split(' ')]
+        val = map(int, self.lines[self.offset].split(' '))
         self.offset += 1
-        return val
+        return list(val)
