@@ -20,6 +20,16 @@ def parse_ascii_mesh_from_file(path, external_skeleton=False):
 def parse_ascii_mesh(file_lines, external_skeleton=False):
     reader = AsciiParser(file_lines)
     model = Model()
+    try:
+        bone_count = reader.parse_int()
+        if bone_count == 0:
+            reader.parse_int()
+        else:
+            assert len(reader.next_vector(2)) > 3
+        reader.offset = 0
+    except (AssertionError, ValueError):
+        reader.lines.insert(0, 0)
+        reader.offset = 0
     for _ in range(reader.parse_int()):
         bone_name = reader.parse_string()
         bone_parent = reader.parse_int()
@@ -53,7 +63,7 @@ def parse_ascii_mesh(file_lines, external_skeleton=False):
             mesh.add_v_color(reader.parse_int_vector())
             for uv_layer_id in mesh.uv_layers.keys():
                 mesh.add_uv(reader.parse_float_vector(), uv_layer_id)
-            if has_bones or vertex_stride-len(mesh.uv_layers) > 3:
+            if has_bones or vertex_stride - len(mesh.uv_layers) > 3:
                 bone_ids = reader.parse_int_vector()
                 weights = reader.parse_float_vector()
                 mesh.add_weight(bone_ids, weights)
