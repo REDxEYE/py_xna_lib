@@ -41,19 +41,22 @@ def parse_ascii_mesh(file_lines, external_skeleton=False):
         if textures:
             material = Material(textures[0][0] + '_mat', textures)
             mesh.set_material(material)
-        for _ in range(reader.parse_int()):
+        vertex_count = reader.parse_int()
+        vertex_data_size = 0
+        while len(reader.next_vector(vertex_data_size)) != 1 and reader:
+            vertex_data_size += 1
+        assert vertex_data_size % vertex_count == 0
+        vertex_stride = vertex_data_size // vertex_count
+        for _ in range(vertex_count):
             mesh.vertices.append(reader.parse_float_vector())
             mesh.normals.append(reader.parse_float_vector())
             mesh.add_v_color(reader.parse_int_vector())
             for uv_layer_id in mesh.uv_layers.keys():
                 mesh.add_uv(reader.parse_float_vector(), uv_layer_id)
-            if has_bones or len(reader.next_vector()) == 4:
-                has_bones = True
+            if has_bones or vertex_stride-len(mesh.uv_layers) > 3:
                 bone_ids = reader.parse_int_vector()
                 weights = reader.parse_float_vector()
                 mesh.add_weight(bone_ids, weights)
-            while len(reader.next_vector()) > 4:
-                reader.parse_float_vector()
         for _ in range(reader.parse_int()):
             mesh.add_polygon(reader.parse_int_vector())
         model.add_mesh(mesh)
