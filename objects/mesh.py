@@ -1,3 +1,6 @@
+import struct
+
+
 class Mesh:
     def __init__(self, name, uv_layers_count):
         self.name = name
@@ -14,6 +17,8 @@ class Mesh:
         self.material = material
 
     def add_polygon(self, indices):
+        if any(a < 0 for a in indices):
+            indices = [abs(a) for a in indices]
         self.indices.append(indices)
 
     def add_vertex(self, pos):
