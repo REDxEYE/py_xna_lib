@@ -6,6 +6,10 @@ class Bone:
         self.quat = quat
 
     @property
+    def blender_pos(self):
+        return self.pos[2], self.pos[0], self.pos[1]
+
+    @property
     def blender_quat(self):
         return self.quat[3], self.quat[0], self.quat[1], self.quat[2]
 
