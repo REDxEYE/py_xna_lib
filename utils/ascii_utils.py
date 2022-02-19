@@ -14,6 +14,8 @@ class AsciiParser:
         return self.next_line()
 
     def next_vector(self, offset=0):
+        if offset + self.offset > len(self.lines):
+            return []
         return self.next_line(offset).split()
 
     def __bool__(self):
