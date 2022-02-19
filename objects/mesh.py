@@ -18,7 +18,7 @@ class Mesh:
 
     def add_polygon(self, indices):
         if any(a < 0 for a in indices):
-            indices = [abs(a) for a in indices]
+            return
         self.indices.append(indices)
 
     def add_vertex(self, pos):
