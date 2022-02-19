@@ -25,7 +25,7 @@ def parse_ascii_mesh(file_lines, external_skeleton=False):
         if bone_count == 0:
             reader.parse_int()
         else:
-            assert len(reader.next_vector(2)) > 3
+            assert len(reader.next_vector(2)) >= 3
         reader.offset = 0
     except (AssertionError, ValueError):
         reader.lines.insert(0, 0)
