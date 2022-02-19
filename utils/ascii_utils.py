@@ -6,17 +6,17 @@ class AsciiParser:
             if '#' in self.lines[i]:
                 self.lines[i] = self.lines[i].split('#')[0]
 
-    def next_line(self, offset=0):
-        return self.lines[self.offset + offset]
+    def peek_line(self, offset=0):
+        return self.lines[self.offset + offset].strip()
 
     @property
-    def next_line_preview(self):
-        return self.next_line()
+    def line_preview(self):
+        return self.peek_line()
 
-    def next_vector(self, offset=0):
+    def peek_vector(self, offset=0):
         if offset + self.offset > len(self.lines):
             return []
-        return self.next_line(offset).split()
+        return self.peek_line(offset).split()
 
     def __bool__(self):
         return self.offset < len(self.lines)
@@ -37,11 +37,11 @@ class AsciiParser:
         return val
 
     def parse_float_vector(self):
-        val = map(float, self.lines[self.offset].split(' '))
+        val = map(float, self.peek_line().split(' '))
         self.offset += 1
         return list(val)
 
     def parse_int_vector(self):
-        val = map(int, self.lines[self.offset].split(' '))
+        val = map(int, self.peek_line().split(' '))
         self.offset += 1
         return list(val)

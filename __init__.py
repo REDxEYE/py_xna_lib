@@ -25,7 +25,7 @@ def parse_ascii_mesh(file_lines, external_skeleton=False):
         if bone_count == 0:
             reader.parse_int()
         else:
-            assert len(reader.next_vector(2)) >= 3
+            assert len(reader.peek_vector(2)) >= 3
         reader.offset = 0
     except (AssertionError, ValueError):
         reader.lines.insert(0, 0)
@@ -53,7 +53,7 @@ def parse_ascii_mesh(file_lines, external_skeleton=False):
             mesh.set_material(material)
         vertex_count = reader.parse_int()
         vertex_data_size = 0
-        while len(reader.next_vector(vertex_data_size)) != 1 and reader:
+        while len(reader.peek_vector(vertex_data_size)) != 1 and reader:
             vertex_data_size += 1
         assert vertex_data_size % vertex_count == 0
         vertex_stride = vertex_data_size // vertex_count
