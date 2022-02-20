@@ -18,6 +18,12 @@ def parse_ascii_mesh_from_file(path, external_skeleton=False):
 
 
 def parse_ascii_mesh(file_lines, external_skeleton=False):
+    ts = {
+        0: 'Diffuse',
+        1: 'Normal',
+        2: 'Spec',
+    }
+
     reader = AsciiParser(file_lines)
     model = Model()
     try:
@@ -49,7 +55,8 @@ def parse_ascii_mesh(file_lines, external_skeleton=False):
         mesh = Mesh(reader.parse_string(), reader.parse_int())
         textures = [(reader.parse_string(), reader.parse_int()) for _ in range(reader.parse_int())]
         if textures:
-            material = Material(textures[0][0] + '_mat', textures)
+            stextures = {ts.get(i, 's_%i' % i): t for (i, t) in enumerate(textures)}
+            material = Material(textures[0][0] + '_mat', stextures)
             mesh.set_material(material)
         vertex_count = reader.parse_int()
         vertex_data_size = 0
@@ -71,3 +78,21 @@ def parse_ascii_mesh(file_lines, external_skeleton=False):
             mesh.add_polygon(reader.parse_int_vector())
         model.add_mesh(mesh)
     return model
+
+
+def parse_ascii_material_from_file(path):
+    assert os.path.exists(path), 'Specified path "%s" does not exist' % path
+    with open(path, 'r', encoding='utf8') as f:
+        file_lines = [line.strip('\n\r') for line in f.read().split('\n') if line]
+    return parse_ascii_material(file_lines, os.path.splitext(os.path.basename(path))[0])
+
+
+def parse_ascii_material(file_lines, file_name):
+    reader = AsciiParser(file_lines)
+    material = Material(file_name, {})
+    while reader:
+        line = reader.parse_string()
+        semantic, texture_and_uv = line.split('=')
+        texture, uv = texture_and_uv.split(' ')
+        material.add_texture(semantic, texture, uv)
+    return material
