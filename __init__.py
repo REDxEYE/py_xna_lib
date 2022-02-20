@@ -56,7 +56,7 @@ def parse_ascii_mesh(file_lines, external_skeleton=False):
         textures = [(reader.parse_string(), reader.parse_int()) for _ in range(reader.parse_int())]
         if textures:
             stextures = {ts.get(i, 's_%i' % i): t for (i, t) in enumerate(textures)}
-            material = Material(textures[0][0] + '_mat', stextures)
+            material = Material(mesh.name + '_mat', stextures)
             mesh.set_material(material)
         vertex_count = reader.parse_int()
         vertex_data_size = 0
