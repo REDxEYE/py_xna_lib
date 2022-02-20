@@ -4,7 +4,7 @@ class AsciiParser:
         self.lines = lines  # type:list
         for i in range(len(self.lines)):
             if '#' in self.lines[i]:
-                self.lines[i] = self.lines[i].split('#')[0]
+                self.lines[i] = self.lines[i].rsplit('#', 1)[0]
 
     def peek_line(self, offset=0):
         return self.lines[self.offset + offset].strip()
