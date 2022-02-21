@@ -48,7 +48,7 @@ def parse_ascii_mesh(file_lines, external_skeleton=False):
         del bone_mat
         del bone
     if external_skeleton and model.bones:
-        raise Exception('Unexpected state, we have external skeleton and internal skeleton')
+        print('WARNING: we have external skeleton and internal skeleton')
     has_bones = bool(model.bones) or external_skeleton
     if not reader:  # Exit early if we don't have mesh data
         return model
