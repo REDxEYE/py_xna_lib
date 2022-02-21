@@ -7,6 +7,7 @@ from .objects.bone import Bone
 from .objects.material import Material
 from .objects.mesh import Mesh
 from .objects.model import Model
+from .utils import get_quaternion_from_euler
 from .utils.ascii_utils import AsciiParser
 
 
@@ -96,3 +97,63 @@ def parse_ascii_material(file_lines, file_name):
         texture, uv = texture_and_uv.split(' ')
         material.add_texture(semantic, texture, uv)
     return material
+
+
+def parse_smd_bones_from_file(path):
+    assert os.path.exists(path), 'Specified path "%s" does not exist' % path
+    with open(path, 'r', encoding='utf8') as f:
+        file_lines = [line.strip('\n\r') for line in f.read().split('\n') if line]
+    return parse_smd_bones(file_lines)
+
+
+def parse_smd_bones(file_lines):
+    reader = AsciiParser(file_lines)
+
+    version = reader.parse_string()
+    _, version = version.split(' ')
+    assert version == '1'
+    bones = []
+    tmp_bones = {}  # bone_id[name, parent]
+    animations = {}  # frame[bone_id,[pos,rot]]
+    while reader:
+        keyword = reader.parse_string()
+        if keyword == 'nodes':
+            while True:
+                bone_string = reader.parse_string()
+                if bone_string == 'end':
+                    break
+                bone_id, bone_string = bone_string.split(' ', 1)
+                bone_name, bone_parent = bone_string.rsplit(' ', 1)
+                bone_id = int(bone_id)
+                bone_parent = int(bone_parent)
+                bone_name = bone_name.strip('"')
+                tmp_bones[bone_id] = bone_name, bone_parent
+                del bone_name, bone_id, bone_parent, bone_string
+        elif keyword == 'skeleton':
+            while True:
+                frame_string = reader.parse_string()
+                if frame_string == 'end':
+                    break
+                _, frame = frame_string.split(' ')
+                frame = int(frame)
+                animations[frame] = {}
+                for bone_id, (bone_name, bone_parent) in tmp_bones.items():
+                    bone_string = [s for s in reader.parse_string().split(' ') if s]
+                    bone_id2 = int(bone_string.pop(0))
+                    assert bone_id2 == bone_id, 'Invalid bone order'
+                    pos = [float(a) for a in bone_string[:3]]
+                    rot = [float(a) for a in bone_string[3:]]
+
+                    bone = Bone(bone_name, bone_parent, pos, get_quaternion_from_euler(*rot))
+                    bones.append(bone)
+        elif keyword == 'triangles':
+            while True:
+                string = reader.parse_string()
+                if string == 'end':
+                    break
+        elif keyword == 'vertexanimation':
+            while True:
+                string = reader.parse_string()
+                if string == 'end':
+                    break
+    return bones
