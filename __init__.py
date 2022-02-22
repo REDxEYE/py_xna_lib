@@ -169,7 +169,10 @@ def parse_bone_names_from_file(path):
 def parse_bone_names(file_lines):
     remap = {}
     for line in file_lines:
-        name_hash, bone_name = line.split('=')
+        tmp = line.split('=')
+        if len(tmp) != 2:
+            continue
+        name_hash, bone_name = tmp
         name_hash = name_hash.strip(' ')
         bone_name = bone_name.strip(' ').rstrip(' ')
         remap[name_hash] = bone_name
