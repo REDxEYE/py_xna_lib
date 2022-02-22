@@ -159,14 +159,14 @@ def parse_smd_bones(file_lines):
     return bones
 
 
-def parse_string_from_file(path):
+def parse_bone_names_from_file(path):
     assert os.path.exists(path), 'Specified path "%s" does not exist' % path
     with open(path, 'r', encoding='utf8') as f:
         file_lines = [line.strip('\n\r') for line in f.read().split('\n') if line]
-    return parse_string_names(file_lines)
+    return parse_bone_names(file_lines)
 
 
-def parse_string_names(file_lines):
+def parse_bone_names(file_lines):
     remap = {}
     for line in file_lines:
         name_hash, bone_name = line.split('=')
