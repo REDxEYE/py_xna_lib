@@ -157,3 +157,20 @@ def parse_smd_bones(file_lines):
                 if string == 'end':
                     break
     return bones
+
+
+def parse_string_from_file(path):
+    assert os.path.exists(path), 'Specified path "%s" does not exist' % path
+    with open(path, 'r', encoding='utf8') as f:
+        file_lines = [line.strip('\n\r') for line in f.read().split('\n') if line]
+    return parse_string_names(file_lines)
+
+
+def parse_string_names(file_lines):
+    remap = {}
+    for line in file_lines:
+        name_hash, bone_name = line.split('=')
+        name_hash = name_hash.strip(' ')
+        bone_name = bone_name.strip(' ').rstrip(' ')
+        remap[name_hash] = bone_name
+    return remap
